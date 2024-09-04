@@ -11,7 +11,6 @@ class SensorModule
     {
         string connectionString = "Test";//Environment.GetEnvironmentVariable("AZURE_CONNECTION_STRING");
 
-        Console.WriteLine("Hallo Welt");
         //var client = DeviceClient.CreateFromConnectionString(connectionString, TransportType.Mqtt);
 
         Random rand = new Random();
