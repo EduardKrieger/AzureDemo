@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorModul", "SensorModul.csproj", "{2D786CAA-FBF0-4508-9253-4967BB48B5D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorModulTest", "SensorModulTest\SensorModulTest.csproj", "{0B199062-D13C-4F29-A035-70F8F5670B4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D786CAA-FBF0-4508-9253-4967BB48B5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D786CAA-FBF0-4508-9253-4967BB48B5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D786CAA-FBF0-4508-9253-4967BB48B5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D786CAA-FBF0-4508-9253-4967BB48B5D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B199062-D13C-4F29-A035-70F8F5670B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B199062-D13C-4F29-A035-70F8F5670B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B199062-D13C-4F29-A035-70F8F5670B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B199062-D13C-4F29-A035-70F8F5670B4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
