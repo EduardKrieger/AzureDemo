@@ -13,7 +13,7 @@ pool:
 
 variables:
   newTag: 'v$(Build.BuildId)'  # Tag für die neue Version
-  modulName: 'temperature-sensor'
+  moduleName: 'temperature-sensor'
 
 steps:
 - checkout: self
