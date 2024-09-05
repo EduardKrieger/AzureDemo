@@ -10,10 +10,21 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- checkout: self  # Checkout des Codes aus dem Repository
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: UseDotNet@2  # Installiere das .NET SDK
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'  # Verwende das neueste .NET SDK
+
+- task: DotNetCoreCLI@2  # Build und Tests durchführen
+  displayName: 'Build and run tests'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'  # Alle .csproj-Dateien im Repository bauen
+
+- task: DotNetCoreCLI@2  # Unit Tests ausführen
+  displayName: 'Run unit tests'
+  inputs:
+    command: 'test'
+    projects: '**/*.csproj'  # Führe Tests für alle Projekte aus
