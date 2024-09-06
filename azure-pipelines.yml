@@ -45,6 +45,12 @@ steps:
 - script: |
     docker login $(acr.host) -u $(acr.username) -p $(acr.password)
   displayName: 'Login to Docker Registry'
+
+# Löschen der bin und obj Ordner
+- script: |
+    rm -rf SensorModul/bin SensorModul/obj
+  displayName: 'Löschen der obj und bin ordner für den docker build'
+
 - task: Docker@2
   displayName: 'Build Docker image'
   inputs:
