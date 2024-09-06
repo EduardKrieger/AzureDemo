@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorModul", "SensorModul.csproj", "{2D786CAA-FBF0-4508-9253-4967BB48B5D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorModulTest", "SensorModulTest\SensorModulTest.csproj", "{0B199062-D13C-4F29-A035-70F8F5670B4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorModul.Tests", "..\SensorModul.Tests\SensorModul.Tests.csproj", "{0B199062-D13C-4F29-A035-70F8F5670B4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

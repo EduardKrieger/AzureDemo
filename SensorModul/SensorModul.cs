@@ -1,3 +1,4 @@
+﻿
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Azure.Devices.Client;

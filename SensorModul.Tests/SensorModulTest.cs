@@ -1,9 +1,9 @@
-namespace SensorModulTest;
 
 using Xunit;
 using System.Threading.Tasks;
-
-public class SensorModuleTest
+namespace SensorModul.Tests 
+{
+    public class SensorModulTest
 {
     [Fact]
     public async Task RunSensorModule_DoesNotThrowException()
@@ -21,4 +21,5 @@ public class SensorModuleTest
         // Simulate some basic logic here, no actual IoT connection
         await Task.Delay(100); // Simulates asynchronous behavior
     }
+}
 }
