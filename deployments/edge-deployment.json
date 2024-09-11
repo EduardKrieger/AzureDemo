@@ -241,7 +241,7 @@
                         },
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "iiotcapgemini.azurecr.io/azure:test10",
+                            "image": "iiotcapgemini.azurecr.io/<TempSensorName>:<TempSensorTag>",
                             "createOptions": "{\"ExposedPorts\":{\"5081/tcp\":{}},\"HostConfig\":{\"NetworkMode\":\"host\",\"PortBindings\":{\"5081/tcp\":[{\"HostPort\":\"5081\"}]},\"CapAdd\":[\"NET_ADMIN\"]},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"Hostname\":\"temp-sensor\"}"
                         },
                         "status": "stopped",
