@@ -82,10 +82,11 @@ steps:
     sed -i "s|\"image\": \"iiotcapgemini.azurecr.io/<${moduleName}>:<${imageTag}>\"|\"image\": \"iiotcapgemini.azurecr.io/${moduleName}:${imageTag}\"|" $DEPLOYMENT_FILE_PATH
     # Zeige den Inhalt der geänderten Datei zur Überprüfung
     cat $DEPLOYMENT_FILE_PATH
+    cp  $DEPLOYMENT_FILE_PATH /home/vsts/work/1/s/test.json
   displayName: 'Update Module Version in YAML'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: $DEPLOYMENT_FILE_PATH
+    targetPath: /home/vsts/work/1/s/test.json
     artifactName: 'DeploymentManifest'
     publishLocation: 'pipeline'
 - task: AzureCLI@2
