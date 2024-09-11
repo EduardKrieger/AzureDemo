@@ -75,9 +75,9 @@ steps:
 - script: |
     echo "Updating module version in deployment YAML..."
     # Update registry credentials
-    sed -i "s|\"username\": \"[^\"]*\"|\"username\": \"$(acr.username)\"|" deployments/edge-deployment.json
-    sed -i "s|\"password\": \"[^\"]*\"|\"password\": \"$(acr.password)\"|" deployments/edge-deployment.json
-    sed -i "s|\"adress\": \"[^\"]*\"|\"adress\": \"$(acr.host)\"|" deployments/edge-deployment.json
+    sed -i "s|\"username\": \"[^\"]*\"|\"username\": \"$(acr.username)\"|" $DEPLOYMENT_FILE_PATH
+    sed -i "s|\"password\": \"[^\"]*\"|\"password\": \"$(acr.password)\"|" $DEPLOYMENT_FILE_PATH
+    sed -i "s|\"adress\": \"[^\"]*\"|\"adress\": \"$(acr.host)\"|" $DEPLOYMENT_FILE_PATH
     # Ändere die Version des Moduls in der YAML-Datei
     sed -i "s|\(${moduleName}:.*:\)\(.*\)|\1${imageTag}|" $DEPLOYMENT_FILE_PATH
     
