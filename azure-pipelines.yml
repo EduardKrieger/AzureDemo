@@ -83,7 +83,11 @@ steps:
     # Zeige den Inhalt der geänderten Datei zur Überprüfung
     cat $DEPLOYMENT_FILE_PATH
   displayName: 'Update Module Version in YAML'
-
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $DEPLOYMENT_FILE_PATH
+    artifactName: 'DeploymentManifest'
+    publishLocation: 'pipeline'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'IIotcapgemini-Service-Connection' 
@@ -92,11 +96,6 @@ steps:
     inlineScript: |
       az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content $DEPLOYMENT_FILE_PATH
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: $DEPLOYMENT_FILE_PATH
-    artifactName: 'DeploymentManifest'
-    publishLocation: 'pipeline'
 - task: AzureIoTEdge@2
   inputs:
     action: 'Deploy to IoT Edge devices'
