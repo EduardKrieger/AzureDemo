@@ -91,6 +91,12 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content $DEPLOYMENT_FILE_PATH
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $DEPLOYMENT_FILE_PATH
+    artifactName: 'DeploymentManifest'
+    publishLocation: 'pipeline'
 - task: AzureIoTEdge@2
   inputs:
     action: 'Deploy to IoT Edge devices'
