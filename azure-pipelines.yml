@@ -91,7 +91,7 @@ steps:
     publishLocation: 'pipeline'
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'IIotcapgemini-Service-Connection' 
+    azureSubscription: 'TestService' 
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -101,7 +101,7 @@ steps:
   inputs:
     action: 'Deploy to IoT Edge devices'
     deploymentFilePath: '$DEPLOYMENT_FILE_PATH'
-    azureSubscription: 'IIotcapgemini-Service-Connection'
+    azureSubscription: 'TestService'
     iothubname: 'iothub-qplg6y'
     deploymentid: '$(System.TeamProject)-devops-deployment'
     priority: '0'
@@ -125,7 +125,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'IIotcapgemini-Service-Connection'
+    azureSubscription: 'TestService'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
