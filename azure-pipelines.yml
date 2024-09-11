@@ -14,6 +14,8 @@ pool:
 variables:
   newTag: 'v$(Build.BuildId)'  # Tag für die neue Version
   moduleName: 'temperature-sensor'
+  edgeModuleName: "tempSensor"  # Der Name des Moduls
+  DEPLOYMENT_FILE_PATH: "deployments/edge-deployment.yml"
 
 steps:
 - checkout: self
@@ -68,6 +70,17 @@ steps:
     tags: |
       $(imageTag)
 
+
+# Lade das Deployment YAML und passe die Modulversion an
+- script: |
+    echo "Updating module version in deployment YAML..."
+    
+    # Ändere die Version des Moduls in der YAML-Datei
+    sed -i "s|\(${moduleName}:.*:\)\(.*\)|\1${imageTag}|" $DEPLOYMENT_FILE_PATH
+    
+    # Zeige den Inhalt der geänderten Datei zur Überprüfung
+    cat $DEPLOYMENT_FILE_PATH
+  displayName: 'Update Module Version in YAML'
 - task: AzureIoTEdge@2
   inputs:
     action: 'Generate deployment manifest'
