@@ -74,4 +74,18 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y"
+      az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json
+
+- script: |
+    echo "Updating deployment.json..."
+    # Update image tag in the deployment manifest
+    jq '.modulesContent.$edgeAgent["properties.desired"].modules["temperatur-sensor"].settings.image = "iiotcapgemini.azurecr.io/$(moduleName):$(imageTag)"' deployment.json > deployment_updated.json
+  displayName: 'Update deployment manifest'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Microsoft Azure Enterprise (95ab6ba3-4df2-4008-9e40-4790879a9773)'  # Der Name deiner Service Connection
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content deployment_updated.jso
