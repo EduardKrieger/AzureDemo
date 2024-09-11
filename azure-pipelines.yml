@@ -70,7 +70,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'Microsoft Azure Enterprise (95ab6ba3-4df2-4008-9e40-4790879a9773)'  # Der Name deiner Service Connection
+    azureSubscription: 'IIotcapgemini-Service-Connection'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -84,7 +84,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'Microsoft Azure Enterprise (95ab6ba3-4df2-4008-9e40-4790879a9773)'  # Der Name deiner Service Connection
+    azureSubscription: 'IIotcapgemini-Service-Connection' 
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
