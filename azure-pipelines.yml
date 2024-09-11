@@ -83,6 +83,14 @@ steps:
     # Zeige den Inhalt der geänderten Datei zur Überprüfung
     cat $DEPLOYMENT_FILE_PATH
   displayName: 'Update Module Version in YAML'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'IIotcapgemini-Service-Connection' 
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content $DEPLOYMENT_FILE_PATH
 - task: AzureIoTEdge@2
   inputs:
     action: 'Deploy to IoT Edge devices'
@@ -122,10 +130,3 @@ steps:
     jq '.modulesContent.$edgeAgent["properties.desired"].modules["temperatur-sensor"].settings.image = "iiotcapgemini.azurecr.io/$(moduleName):$(imageTag)"' deployment.json > deployment_updated.json
   displayName: 'Update deployment manifest'
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'IIotcapgemini-Service-Connection' 
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content deployment_updated.jso
