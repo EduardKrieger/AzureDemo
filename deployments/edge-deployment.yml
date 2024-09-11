@@ -1,0 +1,296 @@
+{
+    "modulesContent": {
+        "$edgeAgent": {
+            "properties.desired": {
+                "schemaVersion": "1.1",
+                "runtime": {
+                    "type": "docker",
+                    "settings": {
+                        "registryCredentials": {
+                            "iiotcapgemini": {
+                                "address": "",
+                                "password": "",
+                                "username": ""
+                            }
+                        }
+                    }
+                },
+                "systemModules": {
+                    "edgeAgent": {
+                        "env": {
+                            "SendRuntimeQualityTelemetry": {
+                                "value": false
+                            }
+                        },
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-agent:1.4"
+                        },
+                        "type": "docker"
+                    },
+                    "edgeHub": {
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-hub:1.4",
+                            "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    }
+                },
+                "modules": {
+                    "opcua-server-cv": {
+                        "env": {
+                            "TIMEOUT_LIMIT": {
+                                "value": 59
+                            }
+                        },
+                        "restartPolicy": "never",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/cv__tightening_tool_position_detection:3.1.0",
+                            "createOptions": "{\"ExposedPorts\":{\"4840/tcp\":{}},\"HostConfig\":{\"Devices\":[{\"PathOnHost\":\"/dev/bus/usb\",\"PathInContainer\":\"/dev/bus/usb\",\"CgroupPermissions\":\"rwm\"}],\"Privileged\":true,\"PortBindings\":{\"4840/tcp\":[{\"HostPort\":\"4840\"}]}},\"Hostname\":\"opcua-server-cv\"}"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    },
+                    "bosch-rexroth-nexo-service": {
+                        "env": {
+                            "NEXEED_CPM_MODULE_URI": {
+                                "value": "https://13.81.116.163:5000/cpm/ppm/v3/process"
+                            },
+                            "NEXEED_CPM_BASIC_AUTH_TOKEN": {
+                                "value": "Basic Y29ubmVjdGl2aXR5OkJDVzIwMjRSb2NrdCE="
+                            },
+                            "CONTROLLER_IP_OR_HOSTNAME": {
+                                "value": "192.168.14.45"
+                            },
+                            "CONTROLLER_PORT": {
+                                "value": "4545"
+                            },
+                            "TZ": {
+                                "value": "Europe/Berlin"
+                            },
+                            "TIGHTENING_OPCUA_INGEST_URI": {
+                                "value": "http://127.0.0.1:3000/tightening-result"
+                            }
+                        },
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/bosch_rexroth-nexo-services:1.0.3.restapi.ppmp",
+                            "createOptions": "{\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"Hostname\":\"tightening-system\",\"ExposedPorts\":{\"4545/tcp\":{},\"45/tcp\":{},\"5000/tcp\":{}},\"HostConfig\":{\"NetworkMode\":\"host\",\"CapAdd\":[\"NET_ADMIN\"],\"PortBindings\":{\"5000/tcp\":[{\"HostPort\":\"5000\"}],\"4545/tcp\":[{\"HostPort\":\"4545\"}],\"45/tcp\":[{\"HostPort\":\"45\"}]}}}"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    },
+                    "opcua-tightening-server": {
+                        "env": {
+                            "OPCUA_SERVER_PORT": {
+                                "value": 2570
+                            },
+                            "REST_SERVER_PORT": {
+                                "value": 3000
+                            },
+                            "TIGHTENING_SYSTEM_REST_URL": {
+                                "value": "http://127.0.0.1:5000/ProgramLoad"
+                            }
+                        },
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/opcua-tightening-server:1.0.7-amd64",
+                            "createOptions": "{\"Hostname\":\"tightening-server\",\"ExposedPorts\":{\"2570/tcp\":{},\"3000/tcp\":{}},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"CapAdd\":[\"NET_ADMIN\"],\"PortBindings\":{\"2570/tcp\":[{\"HostPort\":\"2570\"}],\"3000/tcp\":[{\"HostPort\":\"3000\"}]}}}"
+                        },
+                        "status": "stopped",
+                        "type": "docker"
+                    },
+                    "tightening-process-orchestrator": {
+                        "env": {
+                            "TIGHTENING_OPCUA_URL": {
+                                "value": "opc.tcp://192.168.14.21:2570"
+                            },
+                            "MACHINE_VISION_SERVER_URL": {
+                                "value": "opc.tcp://172.18.0.1:4840"
+                            },
+                            "ORCHESTRATOR_OPCUA_PORT": {
+                                "value": 26550
+                            },
+                            "LOGLEVEL": {
+                                "value": "info"
+                            },
+                            "DETECT_DELAY": {
+                                "value": "500"
+                            },
+                            "BACKEND_API_URL": {
+                                "value": "http://192.168.14.183:8082"
+                            }
+                        },
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/tightening-process-orchestrator:1.2.8",
+                            "createOptions": "{\"Hostname\":\"process-orchestrator\",\"ExposedPorts\":{\"3542/tcp\":{},\"26550/tcp\":{}},\"HostConfig\":{\"PortBindings\":{\"3542/tcp\":[{\"HostPort\":\"3542\"}],\"26550/tcp\":[{\"HostPort\":\"26550\"}]}}}"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    },
+                    "process-manager-TEST": {
+                        "env": {
+                            "TZ": {
+                                "value": "Europe/Berlin"
+                            },
+                            "SPRING_PORT": {
+                                "value": 8082
+                            },
+                            "SPRING_DATA_MONGODB_HOST": {
+                                "value": "mongo-db-bop-storage-for-process-manager-TEST"
+                            },
+                            "SPRING_DATA_MONGODB_PORT": {
+                                "value": 27017
+                            },
+                            "VENTILATOR_API_URL": {
+                                "value": "http://node-red-modbus-translation-for-ventilator:1881"
+                            },
+                            "QUALITY_API_URL": {
+                                "value": "http://192.168.73.75:2002"
+                            },
+                            "ORCHESTRATOR_API_URL": {
+                                "value": "http://192.168.14.21:3542"
+                            }
+                        },
+                        "restartPolicy": "never",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/process-manager:1.0.8",
+                            "createOptions": "{\"ExposedPorts\":{\"8082/tcp\":{}},\"HostConfig\":{\"PortBindings\":{\"8082/tcp\":[{\"HostPort\":\"8082\"}],\"3542/tcp\":[{\"HostPort\":\"3542\"}]}}}"
+                        },
+                        "status": "stopped",
+                        "type": "docker"
+                    },
+                    "worker-guidance-dashboard-TEST": {
+                        "env": {
+                            "TZ": {
+                                "value": "Europe/Berlin"
+                            }
+                        },
+                        "restartPolicy": "never",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/worker-guidance-dashboard:1.0.0",
+                            "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"80\"}],\"4200/tcp\":[{\"HostPort\":\"4200\"}]}}}"
+                        },
+                        "status": "stopped",
+                        "type": "docker"
+                    },
+                    "mongo-db-bop-storage-for-process-manager-TEST": {
+                        "env": {
+                            "TZ": {
+                                "value": "Europe/Berlin"
+                            }
+                        },
+                        "restartPolicy": "never",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/mongo-db-bop-storage-for-process-manager:1.0.0",
+                            "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"27017/tcp\":[{\"HostPort\":\"27017\"}]}}}"
+                        },
+                        "status": "stopped",
+                        "type": "docker"
+                    },
+                    "cv-tightening-tool-position-detection": {
+                        "env": {
+                            "OPCUA-URL": {
+                                "value": "opt.tcp://172.18.0.1:4840"
+                            }
+                        },
+                        "restartPolicy": "never",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/cv_tightening_tool_position_detection:3.0.5",
+                            "createOptions": "{\"HostConfig\":{\"Devices\":[{\"PathOnHost\":\"/dev/bus/usb\",\"PathInContainer\":\"/dev/bus/usb\",\"CgroupPermissions\":\"rwm\"}],\"Privileged\":true}}"
+                        },
+                        "status": "stopped",
+                        "type": "docker"
+                    },
+                    "ollama_test": {
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/ollama_llama3_image:0.0.1",
+                            "createOptions": "{\"Hostname\":\"ollama_test\",\"ExposedPorts\":{\"11434/tcp\":{}},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"CapAdd\":[\"NET_ADMIN\"],\"PortBindings\":{\"11434/tcp\":[{\"HostPort\":\"11434\"}]}}}"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    },
+                    "dev-tightening-server": {
+                        "env": {
+                            "OPCUA_SERVER_PORT": {
+                                "value": 2570
+                            },
+                            "REST_SERVER_PORT": {
+                                "value": 3000
+                            },
+                            "TIGHTENING_SYSTEM_REST_URL": {
+                                "value": "http://127.0.0.1:5000/ProgramLoad"
+                            }
+                        },
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/new-tightening-server:v2",
+                            "createOptions": "{\"Hostname\":\"tightening-server\",\"ExposedPorts\":{\"2570/tcp\":{},\"3000/tcp\":{}},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"CapAdd\":[\"NET_ADMIN\"],\"PortBindings\":{\"2570/tcp\":[{\"HostPort\":\"2570\"}],\"3000/tcp\":[{\"HostPort\":\"3000\"}]}}}"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    },
+                    "tempSensor": {
+                        "env": {
+                            "AZURE_CONNECTION_STRING": {
+                                "value": "HostName=iothub-qplg6y.azure-devices.net;DeviceId=temp-sensor-2000;SharedAccessKey=uVax2rUUVzEmiscbjMdrHD3gV+OVcPeJFAIoTPdmfrc="
+                            }
+                        },
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "iiotcapgemini.azurecr.io/azure:test10",
+                            "createOptions": "{\"ExposedPorts\":{\"5081/tcp\":{}},\"HostConfig\":{\"NetworkMode\":\"host\",\"PortBindings\":{\"5081/tcp\":[{\"HostPort\":\"5081\"}]},\"CapAdd\":[\"NET_ADMIN\"]},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"Hostname\":\"temp-sensor\"}"
+                        },
+                        "status": "stopped",
+                        "type": "docker"
+                    }
+                }
+            }
+        },
+        "$edgeHub": {
+            "properties.desired": {
+                "schemaVersion": "1.1",
+                "storeAndForwardConfiguration": {
+                    "timeToLiveSecs": 7200
+                },
+                "routes": {}
+            }
+        },
+        "opcua-server-cv": {
+            "properties.desired": {}
+        },
+        "bosch-rexroth-nexo-service": {
+            "properties.desired": {}
+        },
+        "opcua-tightening-server": {
+            "properties.desired": {}
+        },
+        "tightening-process-orchestrator": {
+            "properties.desired": {}
+        },
+        "process-manager-TEST": {
+            "properties.desired": {}
+        },
+        "worker-guidance-dashboard-TEST": {
+            "properties.desired": {}
+        },
+        "mongo-db-bop-storage-for-process-manager-TEST": {
+            "properties.desired": {}
+        },
+        "cv-tightening-tool-position-detection": {
+            "properties.desired": {}
+        },
+        "ollama_test": {
+            "properties.desired": {}
+        },
+        "dev-tightening-server": {
+            "properties.desired": {}
+        },
+        "tempSensor": {
+            "properties.desired": {}
+        }
+    }
+}
