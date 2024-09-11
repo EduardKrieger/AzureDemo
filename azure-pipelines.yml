@@ -77,7 +77,7 @@ steps:
     # Update registry credentials
     sed -i "s|\"username\": \"[^\"]*\"|\"username\": \"$(acr.username)\"|" $DEPLOYMENT_FILE_PATH
     sed -i "s|\"password\": \"[^\"]*\"|\"password\": \"$(acr.password)\"|" $DEPLOYMENT_FILE_PATH
-    sed -i "s|\"adress\": \"[^\"]*\"|\"adress\": \"$(acr.host)\"|" $DEPLOYMENT_FILE_PATH
+    sed -i "s|\"adress\": \"[^\"]*\"|\"address\": \"$(acr.host)\"|" $DEPLOYMENT_FILE_PATH
     # Ändere die Version des Moduls in der YAML-Datei
     sed -i "s|\(${moduleName}:.*:\)\(.*\)|\1${imageTag}|" $DEPLOYMENT_FILE_PATH
     
@@ -86,15 +86,8 @@ steps:
   displayName: 'Update Module Version in YAML'
 - task: AzureIoTEdge@2
   inputs:
-    action: 'Generate deployment manifest'
-    templateFilePath: 'deployment.template.json'
-    defaultPlatform: 'amd64'
-    deploymentManifestOutputPath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
-    validateGeneratedDeploymentManifest: 'true'
-- task: AzureIoTEdge@2
-  inputs:
     action: 'Deploy to IoT Edge devices'
-    deploymentFilePath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
+    deploymentFilePath: $DEPLOYMENT_FILE_PATH
     azureSubscription: 'IIotcapgemini-Service-Connection'
     iothubname: 'iothub-qplg6y'
     deploymentid: '$(System.TeamProject)-devops-deployment'
