@@ -67,13 +67,40 @@ steps:
     command: 'push'
     tags: |
       $(imageTag)
-- task: AzureCLI@2
+
+- task: AzureIoTEdge@2
   inputs:
+    action: 'Generate deployment manifest'
+    templateFilePath: 'deployment.template.json'
+    defaultPlatform: 'amd64'
+    deploymentManifestOutputPath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
+    validateGeneratedDeploymentManifest: 'true'
+- task: AzureIoTEdge@2
+  inputs:
+    action: 'Deploy to IoT Edge devices'
+    deploymentFilePath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
     azureSubscription: 'IIotcapgemini-Service-Connection'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json'
-    addSpnToEnvironment: true
+    iothubname: 'iothub-qplg6y'
+    deploymentid: '$(System.TeamProject)-devops-deployment'
+    priority: '0'
+    deviceOption: 'Single Device'
+    deviceId: 'minipc1'
+#- task: AzureCLI@2
+#  inputs:
+#    azureSubscription: 'Microsoft Azure Enterprise(95ab6ba3-4df2-4008-9e40-4790879a9773)'
+#    scriptType: 'bash'
+#    scriptLocation: 'inlineScript'
+#    inlineScript: 'az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json'
+#    addSpnToEnvironment: true
+#- task: AzureCLI@2
+#  inputs:
+#    azureSubscription: 'Microsoft Azure Enterprise'
+#    scriptType: 'bash'
+#    scriptLocation: 'inlineScript'
+#    inlineScript: az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json'
+#    addSpnToEnvironment: true
+
+
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'IIotcapgemini-Service-Connection'
