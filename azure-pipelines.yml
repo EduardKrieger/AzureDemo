@@ -87,7 +87,7 @@ steps:
 - task: AzureIoTEdge@2
   inputs:
     action: 'Deploy to IoT Edge devices'
-    deploymentFilePath: $DEPLOYMENT_FILE_PATH
+    deploymentFilePath: '$DEPLOYMENT_FILE_PATH'
     azureSubscription: 'IIotcapgemini-Service-Connection'
     iothubname: 'iothub-qplg6y'
     deploymentid: '$(System.TeamProject)-devops-deployment'
