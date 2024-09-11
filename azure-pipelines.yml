@@ -77,10 +77,9 @@ steps:
     # Update registry credentials
     sed -i "s|\"username\": \"[^\"]*\"|\"username\": \"$(acr.username)\"|" $DEPLOYMENT_FILE_PATH
     sed -i "s|\"password\": \"[^\"]*\"|\"password\": \"$(acr.password)\"|" $DEPLOYMENT_FILE_PATH
-    sed -i "s|\"adress\": \"[^\"]*\"|\"address\": \"$(acr.host)\"|" $DEPLOYMENT_FILE_PATH
+    sed -i "s|\"address\": \"[^\"]*\"|\"address\": \"$(acr.host)\"|" $DEPLOYMENT_FILE_PATH
     # Ändere die Version des Moduls in der YAML-Datei
-    sed -i "s|\(${moduleName}:.*:\)\(.*\)|\1${imageTag}|" $DEPLOYMENT_FILE_PATH
-    
+    sed -i "s|\"image\": \"iiotcapgemini.azurecr.io/<${moduleName}>:<${imageTag}>\"|\"image\": \"iiotcapgemini.azurecr.io/${moduleName}:${imageTag}\"|" $DEPLOYMENT_FILE_PATH
     # Zeige den Inhalt der geänderten Datei zur Überprüfung
     cat $DEPLOYMENT_FILE_PATH
   displayName: 'Update Module Version in YAML'
