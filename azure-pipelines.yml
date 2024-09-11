@@ -67,7 +67,13 @@ steps:
     command: 'push'
     tags: |
       $(imageTag)
-
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'IIotcapgemini-Service-Connection'
+    scriptType: 'batch'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json'
+    addSpnToEnvironment: true
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'IIotcapgemini-Service-Connection'
@@ -75,7 +81,6 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json
-
 - script: |
     echo "Updating deployment.json..."
     # Update image tag in the deployment manifest
