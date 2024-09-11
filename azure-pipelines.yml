@@ -70,7 +70,7 @@ steps:
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'IIotcapgemini-Service-Connection'
-    scriptType: 'batch'
+    scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: 'az iot edge deployment show --device-id "minipc1" --hub-name "iothub-qplg6y" --output json > deployment.json'
     addSpnToEnvironment: true
