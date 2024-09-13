@@ -52,9 +52,16 @@ steps:
 - script: |
     rm -rf SensorModul/bin SensorModul/obj
   displayName: 'Löschen der obj und bin ordner für den docker build'
-
 - task: Docker@2
-  displayName: 'Build Docker image arm '
+  displayName: 'Build Docker image'
+  inputs:
+    repository: '$(acrName).azurecr.io/$(moduleName)'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(imageTag)
+- task: Docker@2
+  displayName: 'Build Docker image arm'
   inputs:
     repository: '$(acrName).azurecr.io/$(moduleName)'
     command: 'build'
@@ -62,15 +69,6 @@ steps:
     Dockerfile: '**/Dockerfile'
     tags: |
       $(imageTag)-arm
-
-- task: Docker@2
-  displayName: 'Build Docker image arm '
-  inputs:
-    repository: '$(acrName).azurecr.io/$(moduleName)'
-    command: 'build'
-    Dockerfile: '**/Dockerfile'
-    tags: |
-      $(imageTag)
 
 - task: Docker@2
   displayName: 'Push Docker image'
