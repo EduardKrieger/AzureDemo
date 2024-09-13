@@ -1,0 +1,32 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+steps:
+  - task: DockerInstaller@0
+    displayName: 'Install Docker'
+
+  # Aktivierung von buildx
+  - script: |
+      docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+      docker buildx create --use
+      docker buildx inspect --bootstrap
+    displayName: 'Setup Docker Buildx'
+
+  # ARM64-Image bauen und pushen
+  - task: Docker@2
+    displayName: 'Build and Push ARM Docker Image'
+    inputs:
+      command: 'buildAndPush'
+      repository: '$(acrName).azurecr.io/$(moduleName)'
+      tags: |
+        $(test)-arm
+      dockerfile: '**/Dockerfile'
+      containerRegistry: '$(dockerRegistryServiceConnection)' # Azure Container Registry Service Connection
+      arguments: '--platform linux/arm64 --push'
