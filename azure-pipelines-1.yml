@@ -16,10 +16,10 @@ steps:
     inputs:
       script: 'sudo apt-get install -y qemu qemu-user-static'
 
-  - task: Docker@2
-    displayName: 'Login'
+  - task: CmdLine@2
+    displayName: 'Login Docker'
     inputs:
-      command: 'login'
+      script: 'docker login $(acr.host) -u $(acr.username) -p $(acr.password)'
 
   - task: Docker@2
     displayName: 'Build'
