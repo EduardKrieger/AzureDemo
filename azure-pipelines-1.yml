@@ -4,33 +4,22 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-- name: container_registry
-  value: iiotcapgemini.azurecr.io
-- name: repository
-  value: test/test
-
 steps:
-  - task: CmdLine@2
-    displayName: 'Install emulator'
-    inputs:
-      script: 'sudo apt-get install -y qemu qemu-user-static'
+- task: CmdLine@2
+  displayName: 'Login to Docker Registry'
+  inputs:
+    script: |
+      docker login $(acr.host) -u $(acr.username) -p $(acr.password)
 
-  - task: CmdLine@2
-    displayName: 'Login Docker'
-    inputs:
-      script: 'docker login $(acr.host) -u $(acr.username) -p $(acr.password)'
-
-  - task: Docker@2
-    displayName: 'Build'
-    inputs:
-      command: 'build'
-      arguments: '--platform linux/arm64'
-      Dockerfile: 'Dockerfile'
-      tags: 'latest'
-
-  - task: Docker@2
-    displayName: 'Push'
-    inputs:
-      command: 'push'
-      tags: 'latest'
+- task: CmdLine@2
+  displayName: Build
+  inputs:
+    script: |
+      docker run --privileged --rm tonistiigi/binfmt --install arm64
+      docker run --privileged --rm tonistiigi/binfmt
+      docker buildx create --use
+      docker buildx build --platform linux/amd64,linux/arm64 \
+        -t harbor.example.com/vecc/fileserver:$(build.buildNumber) \
+        -t harbor.example.com/vecc/fileserver:latest \
+        --push \
+        .
