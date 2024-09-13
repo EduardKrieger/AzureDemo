@@ -24,7 +24,7 @@ steps:
     displayName: 'Build and Push ARM Docker Image'
     inputs:
       command: 'buildAndPush'
-      repository: '$(acrName).azurecr.io/$(moduleName)'
+      repository: '$(acrName).azurecr.io/tempsens'
       tags: |
         $(test)-arm
       dockerfile: '**/Dockerfile'
