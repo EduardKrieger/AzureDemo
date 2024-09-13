@@ -1,31 +1,36 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - main
 
-resources:
-- repo: self
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- name: container_registry
+  value: iiotcapgemini.azurecr.io
+- name: repository
+  value: test/test
 
 steps:
-  - task: DockerInstaller@0
-    displayName: 'Install Docker'
-
-  # Aktivierung von buildx
-  - script: |
-      docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
-      docker buildx create --use
-      docker buildx inspect --bootstrap
-      docker login $(acr.host) -u $(acr.username) -p $(acr.password)
-    displayName: 'Setup Docker Buildx'
+  - task: CmdLine@2
+    displayName: 'Install emulator'
+    inputs:
+      script: 'sudo apt-get install -y qemu qemu-user-static'
 
   - task: Docker@2
-    displayName: 'Build and Push ARM Docker Image'
+    displayName: 'Login'
     inputs:
-      command: 'buildAndPush'
-      repository: '$(acr.username).azurecr.io/tempsens'
-      tags: |
-        test-arm
-      dockerfile: '**/Dockerfile'
-      arguments: '--platform linux/arm64 --push'
+      command: 'login'
+
+  - task: Docker@2
+    displayName: 'Build'
+    inputs:
+      command: 'build'
+      arguments: '--platform linux/arm64'
+      Dockerfile: 'Dockerfile'
+      tags: 'latest'
+
+  - task: Docker@2
+    displayName: 'Push'
+    inputs:
+      command: 'push'
+      tags: 'latest'
