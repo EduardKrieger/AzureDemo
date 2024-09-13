@@ -60,6 +60,23 @@ steps:
     Dockerfile: '**/Dockerfile'
     tags: |
       $(imageTag)
+
+- script: |
+    docker buildx create --name multiarch-builder
+    docker buildx use multiarch-builder
+    docker buildx inspect --bootstrap
+  displayName: 'Set up Docker Buildx'
+- task: Docker@2
+  displayName: 'Build and Push Docker images for ARM and x64'
+  inputs:
+    repository: '$(acrName).azurecr.io/$(moduleName)'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(imageTag)-x64
+      $(imageTag)-arm
+    buildContext: '.'
+    arguments: '--platform linux/amd64,linux/arm64'
 - task: Docker@2
   displayName: 'Build Docker image arm'
   inputs:
