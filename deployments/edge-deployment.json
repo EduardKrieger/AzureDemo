@@ -232,7 +232,7 @@
                         },
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "iiotcapgemini.azurecr.io/temperature-sensor:v417",
+                            "image": "iiotcapgemini.azurecr.io/temperature-sensor:v440",
                             "createOptions": "{\"ExposedPorts\":{\"5081/tcp\":{}},\"HostConfig\":{\"NetworkMode\":\"host\",\"PortBindings\":{\"5081/tcp\":[{\"HostPort\":\"5081\"}]},\"CapAdd\":[\"NET_ADMIN\"]},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"Hostname\":\"temp-sensor\"}"
                         },
                         "status": "running",
@@ -320,10 +320,10 @@
         },
         "temperatureStreamJob": {
             "properties.desired": {
-                "ASAJobInfo": "https://sensordatastorage2.blob.core.windows.net/asa-edge-c79657c4-76d7-4ddf-bcc0-b01d028a3de2/ASAEdgeJobs/c79657c4-76d7-4ddf-bcc0-b01d028a3de2/0638619552000000000.023bceed-3393-474f-8503-7d99cb9e7a7d/ASAEdgeJobDefinition.zip?sv=2023-08-03&se=2027-09-15T23%3A54%3A04Z&sr=b&sp=r&sig=3yS8Cpv%2B0pEl%2BSMUqnJDpmsXUU00nh7DMzPqwIMLQXI%3D",
+                "ASAJobInfo": "https://sensordatastorage2.blob.core.windows.net/asa-edge-c79657c4-76d7-4ddf-bcc0-b01d028a3de2/ASAEdgeJobs/c79657c4-76d7-4ddf-bcc0-b01d028a3de2/0638620416000000000.1087e699-ac0e-45ea-a038-263fbac50775/ASAEdgeJobDefinition.zip?sv=2023-08-03&se=2027-09-16T10%3A32%3A19Z&sr=b&sp=r&sig=X3FlD62b4fXsr3hStN%2FDIvyzardD%2FdATVoEz%2BS54Nq4%3D",
                 "ASAJobResourceId": "/subscriptions/95ab6ba3-4df2-4008-9e40-4790879a9773/resourceGroups/IIoTCapgemini-27199/providers/Microsoft.StreamAnalytics/streamingjobs/temperatureStreamJob",
-                "ASAJobEtag": "4dbbf9c4-d3dc-4569-a85b-c6b504d4a838",
-                "PublishTimestamp": "9/15/2024 11:54:08 PM"
+                "ASAJobEtag": "d7b73e5e-0910-4588-af14-fe9aed8d6423",
+                "PublishTimestamp": "9/16/2024 10:32:22 AM"
             }
         }
     }
