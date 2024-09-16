@@ -110,6 +110,16 @@ steps:
 #    priority: '0'
 #    deviceOption: 'Single Device'
 #    deviceId: 'minipc1'
+- task: AzureIoTEdge@2
+  inputs:
+    action: 'Deploy to IoT Edge devices'
+    deploymentFilePath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
+    azureSubscription: 'ServicePrincipal'
+    iothubname: 'iothub-qplg6y'
+    deploymentid: '$(System.TeamProject)-devops-deployment'
+    priority: '0'
+    deviceOption: 'Single Device'
+    deviceId: 'minipc1'
 
 
 
