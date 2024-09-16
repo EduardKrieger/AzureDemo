@@ -74,6 +74,8 @@ steps:
 # Lade das Deployment YAML und passe die Modulversion an
 - script: |
     cat $DEPLOYMENT_FILE_PATH
+    echo ${newTag}
+    echo ${imageTag}
     echo "Updating module version in deployment YAML..."
     # Update registry credentials
     sed -i "s|\"username\": \"[^\"]*\"|\"username\": \"$(acr.username)\"|" $DEPLOYMENT_FILE_PATH
