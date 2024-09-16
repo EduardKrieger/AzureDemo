@@ -8,9 +8,9 @@
                     "settings": {
                         "registryCredentials": {
                             "iiotcapgemini": {
-                                "address": "iiotcapgemini.azurecr.io",
-                                "password": "lNcaQXUogll=w88gTx0jfMNJZ2QbnZRC",
-                                "username": "iiotcapgemini"
+                                "address": "",
+                                "password": "",
+                                "username": ""
                             }
                         }
                     }
