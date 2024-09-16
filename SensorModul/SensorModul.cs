@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://*:5000");
 var app = builder.Build();
 
 
@@ -42,7 +43,6 @@ async Task RunSensorModule()
                 };;
         message.Properties.Add("SensorID", "TS123");
         //message.Properties.Add("tempAlert", (temperature > 35 ) ? "true" : "false");
-        Console.WriteLine(message);
         try{
             await client.SendEventAsync(message);
         }catch (Exception ex)
