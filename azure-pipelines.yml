@@ -84,11 +84,12 @@ steps:
     cat $DEPLOYMENT_FILE_PATH
     cp  $DEPLOYMENT_FILE_PATH /home/vsts/work/1/s/test.json
   displayName: 'Update Module Version in YAML'
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: /home/vsts/work/1/s/deplyoment.json
-    artifactName: 'DeploymentManifest'
-    publishLocation: 'pipeline'
+
+#- task: PublishPipelineArtifact@1
+#  inputs:
+#    targetPath: /home/vsts/work/1/s/deplyoment.json
+#    artifactName: 'DeploymentManifest'
+#    publishLocation: 'pipeline'
 
 #- task: AzureCLI@2
 #  inputs:
