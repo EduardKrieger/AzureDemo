@@ -40,6 +40,9 @@ steps:
 - script: |
     git fetch --tags
     latest_tag=$(git describe --tags --abbrev=0)
+    newTag="v$(Build.BuildId)"
+    echo "New tag: $newTag"
+    echo "##vso[task.setvariable variable=imageTag]$newTag"
     echo "##vso[task.setvariable variable=imageTag]$(newTag)"
   displayName: 'Set Docker image tag'
   condition: succeeded()  # Führe nur aus, wenn alle vorherigen Schritte erfolgreich sind
@@ -74,8 +77,8 @@ steps:
 # Lade das Deployment YAML und passe die Modulversion an
 - script: |
     cat $DEPLOYMENT_FILE_PATH
-    echo "Image Tag $newTag"
-    echo "Image tag $imageTag"
+    echo "Image Tag ${newTag}"
+    echo "Image tag $(imageTag)"
     echo "Updating module version in deployment YAML..."
     # Update registry credentials
     sed -i "s|\"username\": \"[^\"]*\"|\"username\": \"$(acr.username)\"|" $DEPLOYMENT_FILE_PATH
