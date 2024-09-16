@@ -7,21 +7,21 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
-// Web application setup
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-// Sensor telemetry data
+
 var telemetryDataPoint = new { temperature = 0 };
 string connectionString = Environment.GetEnvironmentVariable("AZURE_CONNECTION_STRING");
-// Configure the web server
+
 app.MapGet("/", () => "Starting Sensor Module");
 
 app.MapGet("/sensor-data", () => telemetryDataPoint);
 
-app.RunAsync(); // Start the web server asynchronously
+app.RunAsync(); 
 
-// Sensor module logic
+
 async Task RunSensorModule()
 {
     var client = DeviceClient.CreateFromConnectionString(connectionString, TransportType.Mqtt);
@@ -32,16 +32,17 @@ async Task RunSensorModule()
     {
         Console.WriteLine("Starting to send Messages");
         var temperature = rand.Next(20, 40) ;
+        var humidity = rand.Next(35, 99);
         telemetryDataPoint = new { temperature = temperature };
+        //telemetryDataPoint = new { temperature = temperature, humidity= humidity };
         var messageString = JsonConvert.SerializeObject(telemetryDataPoint);
         var message = new Message(System.Text.Encoding.UTF8.GetBytes(messageString))   {
                     ContentEncoding = "utf-8",
                     ContentType = "application/json",
                 };;
-        message.Properties.Add("SensorID", "EDSens");
-        message.Properties.Add("tempAlert", (temperature > 35 ) ? "true" : "false");
+        message.Properties.Add("SensorID", "TS123");
+        //message.Properties.Add("tempAlert", (temperature > 35 ) ? "true" : "false");
         Console.WriteLine(message);
-        //Task task = awaitclient.SendEventAsync(message);
         try{
             await client.SendEventAsync(message);
         }catch (Exception ex)
@@ -49,11 +50,10 @@ async Task RunSensorModule()
                 Console.WriteLine($"Error sending message: {ex.Message}");
 
             }
-        //Console.WriteLine(task);
-        Console.WriteLine($"Sent message: {messageString}");
-        await Task.Delay(5000); // Wait for 5 seconds
-    }
-}
 
+        Console.WriteLine($"Sent message: {messageString}");
+        await Task.Delay(5000); 
+}
+}
 // Start the sensor module asynchronously
 await RunSensorModule();
