@@ -97,7 +97,6 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-     az login
      az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content $DEPLOYMENT_FILE_PATH
 
 #- task: AzureIoTEdge@2
