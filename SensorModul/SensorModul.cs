@@ -43,7 +43,7 @@ async Task RunSensorModule()
                     ContentType = "application/json",
                 };;
         message.Properties.Add("SensorID", "TS123");
-        //message.Properties.Add("tempAlert", (temperature > 35 ) ? "true" : "false");
+        message.Properties.Add("tempAlert", (temperature > 35 ) ? "true" : "false");
         try{
             await client.SendEventAsync(message);
         }catch (Exception ex)
