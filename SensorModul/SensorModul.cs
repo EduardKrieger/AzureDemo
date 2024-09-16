@@ -13,8 +13,8 @@ builder.WebHost.UseUrls("http://*:5753");
 var app = builder.Build();
 
 
-var telemetryDataPoint = new { temperature = 0};
-//var telemetryDataPoint = new { temperature = 0 , humidity = 0};
+//var telemetryDataPoint = new { temperature = 0};
+var telemetryDataPoint = new { temperature = 0 , humidity = 0};
 string connectionString = Environment.GetEnvironmentVariable("AZURE_CONNECTION_STRING");
 
 app.MapGet("/", () => "Starting Sensor Module");
@@ -35,15 +35,15 @@ async Task RunSensorModule()
         Console.WriteLine("Starting to send Messages");
         var temperature = rand.Next(20, 40) ;
         var humidity = rand.Next(35, 99);
-        telemetryDataPoint = new { temperature = temperature };
-        //telemetryDataPoint = new { temperature = temperature, humidity= humidity };
+        //telemetryDataPoint = new { temperature = temperature };
+        telemetryDataPoint = new { temperature = temperature, humidity= humidity };
         var messageString = JsonConvert.SerializeObject(telemetryDataPoint);
         var message = new Message(System.Text.Encoding.UTF8.GetBytes(messageString))   {
                     ContentEncoding = "utf-8",
                     ContentType = "application/json",
                 };;
         message.Properties.Add("SensorID", "TS123");
-        message.Properties.Add("tempAlert", (temperature > 35 ) ? "true" : "false");
+        message.Properties.Add("TemperatureAlert", (temperature > 35 ) ? "true" : "false");
         try{
             await client.SendEventAsync(message);
         }catch (Exception ex)
