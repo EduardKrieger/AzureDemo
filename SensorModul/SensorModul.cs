@@ -35,8 +35,8 @@ async Task RunSensorModule()
         Console.WriteLine("Starting to send Messages");
         var temperature = rand.Next(20, 40) ;
         var humidity = rand.Next(35, 99);
-        //telemetryDataPoint = new { temperature = temperature };
-        telemetryDataPoint = new { temperature = temperature, humidity= humidity };
+        telemetryDataPoint = new { temperature = temperature };
+        //telemetryDataPoint = new { temperature = temperature, humidity= humidity };
         var messageString = JsonConvert.SerializeObject(telemetryDataPoint);
         var message = new Message(System.Text.Encoding.UTF8.GetBytes(messageString))   {
                     ContentEncoding = "utf-8",
