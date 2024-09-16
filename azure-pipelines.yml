@@ -14,7 +14,7 @@ pool:
 variables:
   newTag: 'v$(Build.BuildId)'  # Tag für die neue Version
   moduleName: 'temperature-sensor'
-  edgeModuleName: "tempSensor"  # Der Name des Moduls
+  edgeModuleName: "temperatureSensor"  # Der Name des Moduls
   DEPLOYMENT_FILE_PATH: "deployments/edge-deployment.json"
 
 steps:
