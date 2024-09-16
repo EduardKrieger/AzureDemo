@@ -13,7 +13,8 @@ builder.WebHost.UseUrls("http://*:5000");
 var app = builder.Build();
 
 
-var telemetryDataPoint = new { temperature = 0 };
+//var telemetryDataPoint = new { temperature = 0 , humidity = 0};
+var telemetryDataPoint = new { temperature = 0 , humidity = 0};
 string connectionString = Environment.GetEnvironmentVariable("AZURE_CONNECTION_STRING");
 
 app.MapGet("/", () => "Starting Sensor Module");
