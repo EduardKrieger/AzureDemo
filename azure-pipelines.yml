@@ -14,7 +14,7 @@ pool:
 variables:
   newTag: 'v$(Build.BuildId)'  # Tag für die neue Version
   moduleName: 'temperature-sensor'
-  edgeModuleName: "temperatureSensor"  # Der Name des Moduls
+  edgeModuleName: "temperatureSensor"  
   DEPLOYMENT_FILE_PATH: "deployments/edge-deployment.json"
 
 steps:
@@ -45,7 +45,7 @@ steps:
     echo "##vso[task.setvariable variable=imageTag]$newTag"
     echo "##vso[task.setvariable variable=imageTag]$(newTag)"
   displayName: 'Set Docker image tag'
-  condition: succeeded()  # Führe nur aus, wenn alle vorherigen Schritte erfolgreich sind
+  condition: succeeded() 
 
 - script: |
     docker login $(acr.host) -u $(acr.username) -p $(acr.password)
@@ -88,11 +88,7 @@ steps:
     cp  $DEPLOYMENT_FILE_PATH /home/vsts/work/1/s/test.json
   displayName: 'Update Module Version in YAML'
 
-#- task: PublishPipelineArtifact@1
-#  inputs:
-#    targetPath: /home/vsts/work/1/s/deplyoment.json
-#    artifactName: 'DeploymentManifest'
-#    publishLocation: 'pipeline'
+
 
 - task: AzureCLI@2
   inputs:
@@ -102,26 +98,7 @@ steps:
     inlineScript: |
      az iot edge set-modules --device-id "minipc1" --hub-name "iothub-qplg6y" --content $DEPLOYMENT_FILE_PATH
 
-#- task: AzureIoTEdge@2
-#  inputs:
-#    action: 'Deploy to IoT Edge devices'
-#    deploymentFilePath: '$DEPLOYMENT_FILE_PATH'
-#    azureSubscription: 'TestConnection'
-#    iothubname: 'iothub-qplg6y'
-#    deploymentid: '$(System.TeamProject)-devops-deployment'
-#    priority: '0'
-#    deviceOption: 'Single Device'
-#    deviceId: 'minipc1'
-#- task: AzureIoTEdge@2
-#  inputs:
-#    action: 'Deploy to IoT Edge devices'
-#    deploymentFilePath: '$(DEPLOYMENT_FILE_PATH)'
-#    azureSubscription: 'ServicePrincipal'
-#    iothubname: 'iothub-qplg6y'
-#    deploymentid: '$(System.TeamProject)-devops-deployment'
-#    priority: '0'
-#    deviceOption: 'Single Device'
-#    deviceId: 'minipc1'
+
 
 
 
