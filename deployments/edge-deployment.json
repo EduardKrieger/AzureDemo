@@ -8,9 +8,9 @@
                     "settings": {
                         "registryCredentials": {
                             "iiotcapgemini": {
-                                "address": "",
-                                "password": "",
-                                "username": ""
+                                "address": "iiotcapgemini.azurecr.io",
+                                "password": "lNcaQXUogll=w88gTx0jfMNJZ2QbnZRC",
+                                "username": "iiotcapgemini"
                             }
                         }
                     }
@@ -93,7 +93,7 @@
                                 "value": "http://127.0.0.1:5000/ProgramLoad"
                             }
                         },
-                        "restartPolicy": "always",
+                        "restartPolicy": "never",
                         "settings": {
                             "image": "iiotcapgemini.azurecr.io/opcua-tightening-server:1.0.7-amd64",
                             "createOptions": "{\"Hostname\":\"tightening-server\",\"ExposedPorts\":{\"2570/tcp\":{},\"3000/tcp\":{}},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"CapAdd\":[\"NET_ADMIN\"],\"PortBindings\":{\"2570/tcp\":[{\"HostPort\":\"2570\"}],\"3000/tcp\":[{\"HostPort\":\"3000\"}]}}}"
@@ -204,15 +204,6 @@
                         "status": "stopped",
                         "type": "docker"
                     },
-                    "ollama_test": {
-                        "restartPolicy": "always",
-                        "settings": {
-                            "image": "iiotcapgemini.azurecr.io/ollama_llama3_image:0.0.1",
-                            "createOptions": "{\"Hostname\":\"ollama_test\",\"ExposedPorts\":{\"11434/tcp\":{}},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"CapAdd\":[\"NET_ADMIN\"],\"PortBindings\":{\"11434/tcp\":[{\"HostPort\":\"11434\"}]}}}"
-                        },
-                        "status": "running",
-                        "type": "docker"
-                    },
                     "dev-tightening-server": {
                         "env": {
                             "OPCUA_SERVER_PORT": {
@@ -233,7 +224,7 @@
                         "status": "running",
                         "type": "docker"
                     },
-                    "tempSensor": {
+                    "temperatureSensor": {
                         "env": {
                             "AZURE_CONNECTION_STRING": {
                                 "value": "HostName=iothub-qplg6y.azure-devices.net;DeviceId=temp-sensor-2000;SharedAccessKey=uVax2rUUVzEmiscbjMdrHD3gV+OVcPeJFAIoTPdmfrc="
@@ -241,11 +232,33 @@
                         },
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "iiotcapgemini.azurecr.io/<TempSensorName>:<TempSensorTag>",
+                            "image": "iiotcapgemini.azurecr.io/temperature-sensor:v417",
                             "createOptions": "{\"ExposedPorts\":{\"5081/tcp\":{}},\"HostConfig\":{\"NetworkMode\":\"host\",\"PortBindings\":{\"5081/tcp\":[{\"HostPort\":\"5081\"}]},\"CapAdd\":[\"NET_ADMIN\"]},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"Hostname\":\"temp-sensor\"}"
                         },
-                        "status": "stopped",
+                        "status": "running",
                         "type": "docker"
+                    },
+                    "temperatureSensor2": {
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.5"
+                        },
+                        "status": "running",
+                        "type": "docker"
+                    },
+                    "temperatureStreamJob": {
+                        "env": {
+                            "PlanId": {
+                                "value": "stream-analytics-on-iot-edge"
+                            }
+                        },
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.14"
+                        },
+                        "status": "running",
+                        "type": "docker",
+                        "version": "1.0.0.0"
                     }
                 }
             }
@@ -256,7 +269,20 @@
                 "storeAndForwardConfiguration": {
                     "timeToLiveSecs": 7200
                 },
-                "routes": {}
+                "routes": {
+                    "telemetryToCloud": {
+                        "route": "FROM /messages/modules/temperatureSensor2/* INTO $upstream"
+                    },
+                    "alertsToCloud": {
+                        "route": "FROM /messages/modules/temperatureStreamJob/* INTO $upstream"
+                    },
+                    "alertsToReset": {
+                        "route": "FROM /messages/modules/temperatureStreamJob/* INTO BrokeredEndpoint(\"/modules/temperatureSensor2/inputs/control\")"
+                    },
+                    "telemetryToAsa": {
+                        "route": "FROM /messages/modules/temperatureSensor2/* INTO BrokeredEndpoint(\"/modules/temperatureStreamJob/inputs/temperature\")"
+                    }
+                }
             }
         },
         "opcua-server-cv": {
@@ -283,14 +309,22 @@
         "cv-tightening-tool-position-detection": {
             "properties.desired": {}
         },
-        "ollama_test": {
-            "properties.desired": {}
-        },
         "dev-tightening-server": {
             "properties.desired": {}
         },
-        "tempSensor": {
+        "temperatureSensor": {
             "properties.desired": {}
+        },
+        "temperatureSensor2": {
+            "properties.desired": {}
+        },
+        "temperatureStreamJob": {
+            "properties.desired": {
+                "ASAJobInfo": "https://sensordatastorage2.blob.core.windows.net/asa-edge-c79657c4-76d7-4ddf-bcc0-b01d028a3de2/ASAEdgeJobs/c79657c4-76d7-4ddf-bcc0-b01d028a3de2/0638619552000000000.023bceed-3393-474f-8503-7d99cb9e7a7d/ASAEdgeJobDefinition.zip?sv=2023-08-03&se=2027-09-15T23%3A54%3A04Z&sr=b&sp=r&sig=3yS8Cpv%2B0pEl%2BSMUqnJDpmsXUU00nh7DMzPqwIMLQXI%3D",
+                "ASAJobResourceId": "/subscriptions/95ab6ba3-4df2-4008-9e40-4790879a9773/resourceGroups/IIoTCapgemini-27199/providers/Microsoft.StreamAnalytics/streamingjobs/temperatureStreamJob",
+                "ASAJobEtag": "4dbbf9c4-d3dc-4569-a85b-c6b504d4a838",
+                "PublishTimestamp": "9/15/2024 11:54:08 PM"
+            }
         }
     }
 }
