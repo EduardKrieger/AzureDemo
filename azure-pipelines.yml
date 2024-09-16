@@ -40,6 +40,9 @@ steps:
 - script: |
     git fetch --tags
     latest_tag=$(git describe --tags --abbrev=0)
+    newTag="v$(Build.BuildId)"
+    echo "New tag: $newTag"
+    echo "##vso[task.setvariable variable=imageTag]$newTag"
     echo "##vso[task.setvariable variable=imageTag]$(newTag)"
   displayName: 'Set Docker image tag'
   condition: succeeded()  # Führe nur aus, wenn alle vorherigen Schritte erfolgreich sind
@@ -79,7 +82,7 @@ steps:
     sed -i "s|\"password\": \"[^\"]*\"|\"password\": \"$(acr.password)\"|" $DEPLOYMENT_FILE_PATH
     sed -i "s|\"address\": \"[^\"]*\"|\"address\": \"$(acr.host)\"|" $DEPLOYMENT_FILE_PATH
     # Ändere die Version des Moduls in der YAML-Datei
-    sed -i "s|\"image\": \"iiotcapgemini.azurecr.io/${moduleName}:${newTag}\"|\"image\": \"iiotcapgemini.azurecr.io/${moduleName}:${newTag}\"|" $DEPLOYMENT_FILE_PATH
+    sed -i "s|\"image\": \"iiotcapgemini.azurecr.io/$(moduleName):[^\"]*\"|\"image\": \"iiotcapgemini.azurecr.io/$(moduleName):$(imageTag)\"|" $DEPLOYMENT_FILE_PATH
     # Zeige den Inhalt der geänderten Datei zur Überprüfung
     cat $DEPLOYMENT_FILE_PATH
     cp  $DEPLOYMENT_FILE_PATH /home/vsts/work/1/s/test.json
